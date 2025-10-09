@@ -1,9 +1,6 @@
-
+import { Link } from "react-router-dom"
 export default function Navbar(){
     return(<>
-        <LInk to={'/'}>Home</LInk>
-        <LInk to={'/about'}>About</LInk>
-        <LInk to={'/settings'}>Settings</LInk>
-        <LInk to={'/profile'}>Profile</LInk>
+        <Link to={'/'}>Home</Link>
     </>)
 }
