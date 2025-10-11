@@ -31,3 +31,10 @@ export default function NavbarLinker({ to, href = '#', text, children, className
 }
 
 
+export function NavbarContainer({children}){
+    return(<nav
+    className="bg-red-700"
+    >
+            {children}
+    </nav>)
+}
