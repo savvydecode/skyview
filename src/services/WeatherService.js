@@ -4,7 +4,7 @@ import axios from "axios";
 export default async function CurrentWeatherData(userCity) {
 
     const apiKey = import.meta.env.VITE_API_KEY;
-    let city = 'Sunyani'
+    let city = 'techiman'
 
     city = userCity ?? city;
     const Url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`

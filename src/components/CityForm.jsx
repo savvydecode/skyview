@@ -1,14 +1,24 @@
 
+import { useState } from "react"
+import useCityStore from "../store"
 
 export default function CityForm() {
+//states
+const [value, setValue] = useState('')
+const setCity = useCityStore(state => state.setCity);
 
+const handleSubmit = (e) => {
+    e.preventDefault();
+    setCity(value)
+    setValue("")
+}
     return (<>
-        <form action="">
+        <form onSubmit={handleSubmit}>
             <div className="relative">
-                <input
+                <input value={value} onChange={((e) => setValue(e.target.value))}
                     className={[
                         "pr-10 border-2  border-blue-400 rounded-2xl px-4 py-1 text-l",
-                        "placeholder:text-sm placeholder-blue-300  bg-gray-200 ",
+                        "placeholder:text-sm placeholder-blue-300  bg-gray-200 text-black ",
                         "hover:border-blue-700 hover:shadow-2xl focus:border-blue-700 focus:outline-none transition duration-300 ease-in-out"
                     ].join(" ")}
 
