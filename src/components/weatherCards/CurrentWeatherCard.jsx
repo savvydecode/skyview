@@ -12,48 +12,49 @@ export default function CurrentWeather() {
     const city = useCityStore(state => state.city)
     useEffect(() => {
         const fetchData = async () => {
-            setError(false);
+            setError('');
             setLoading(true);
             setData(null)
-            
-            if (!city) { return }; 
-            try {
 
-                const data = await (CurrentWeatherData(city))
-                if (data === "Network Error") {
-                    setError(data)
-                    setData(null)
+            if (!city) { return };
+            try {
+                const getData = await (CurrentWeatherData(city))
+                console.log(getData)
+                console.log(getData?.message)
+                // an Error has .message object, use that to detect if there is an error
+                if (getData?.message == undefined) {
+                    setData(getData)
+                    setTemp(Math.round(getData.main.temp - 273.5)) //conver the unit value to celcius
+                    setError(null)
                     setLoading(false)
                 } else {
-                    setData(data)
-                    setTemp(Math.round(data.main.temp-273.5)) //conver the unit value to celcius
-                    console.log(temp)
+                    setError(getData.message)
+                    setData(null)
                     setLoading(false)
-                    console.log(data)
+                    throw new Error(`${getData.message}`)
                 }
-            } catch (err) {
-                setLoading(false)
-                setError(err ?? error)
-                console.error(`Error!: ${error}`)
+            } catch (error) {
+                console.log(error)
             }
+
         }
         fetchData()
     }, [city])
 
 
     //Convert temperature to the appropriate unit
-    const handleChange = (e) =>{
+    const handleChange = (e) => {
         e.preventDefault()
         let selectedUnit = e.target.value;
-        if(selectedUnit === "celsius"){
-            setTemp(Math.round(data.main.temp-273.5))
-        } else 
-        if(selectedUnit === "fahrenheit"){
-            setTemp(Math.round((data.main.temp - 273.15) * 9/5 + 32));
-            console.log(temp)
-        } else{
-            setTemp(Math.round(data.main.temp))
-        } 
+        if (selectedUnit === "celsius") {
+            setTemp(Math.round(data.main.temp - 273.5))
+        } else
+            if (selectedUnit === "fahrenheit") {
+                setTemp(Math.round((data.main.temp - 273.15) * 9 / 5 + 32));
+                console.log(temp)
+            } else {
+                setTemp(Math.round(data.main.temp))
+            }
 
     }
 
@@ -75,13 +76,13 @@ export default function CurrentWeather() {
                 >
                     <div className="flex flex-row justify-between">
                         <p>Current Weather</p>
-                        <select name="temperature" id="temperature"  className="border border-gray-300 rounded-2xl px-3 py-2 text-black bg-blue-100"
-                        onChange={handleChange}
+                        <select name="temperature" id="temperature" className="border border-gray-300 rounded-2xl px-3 py-2 text-black bg-blue-100"
+                            onChange={handleChange}
                         >
                             <option value="celsius">Celsius</option>
                             <option value="fahrenheit">Fahrenheit</option>
                             <option value="kelvin">Kelvin</option>
-                            
+
                         </select>
 
                     </div>
@@ -91,8 +92,8 @@ export default function CurrentWeather() {
                     </div>
                     <div>{temp}</div>
 
-                    
-                    </div>}
+
+                </div>}
     </div>)
 }
 

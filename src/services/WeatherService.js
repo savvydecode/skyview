@@ -9,15 +9,18 @@ export default async function CurrentWeatherData(userCity) {
     city = userCity ?? city;
     //merge requirements into a single url
     const Url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
-    console.log(Url)
     try {
         const res = await axios.get(Url)
+        if(!res.status === 200){
+            throw new Error(`Error: City not Found\n${res.status}`)
+        }
         return (res.data)
 
     } catch (error) {
-        return (error.message) //"Network Error"
+        //console.log(error)
+        return (error) //"Network Error"
         
     }
 }
 
- 
+
