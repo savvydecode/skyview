@@ -6,7 +6,7 @@ const useCityStore = create((set) => ({
     setCity: (value) => set((state) => ({
         city: (value ?? '').trim()
     })),
-    setCity: () => set((state) => ({
+    deleteCity: () => set((state) => ({
         city: ""
     })),
 }))
