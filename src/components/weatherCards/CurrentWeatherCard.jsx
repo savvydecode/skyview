@@ -15,12 +15,11 @@ export default function CurrentWeather() {
             setError(false);
             setLoading(true);
             setData(null)
-            //check if city is not null or undefined
-            const City = "Accra"
-            //if (!city) { return }; remove comment to get user input
+            
+            if (!city) { return }; 
             try {
 
-                const data = await (CurrentWeatherData(City))
+                const data = await (CurrentWeatherData(city))
                 if (data === "Network Error") {
                     setError(data)
                     setData(null)
