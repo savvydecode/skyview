@@ -13,10 +13,14 @@ export default function CurrentWeather() {
     useEffect(() => {
         const fetchData = async () => {
             setError('');
-            setLoading(true);
             setData(null)
 
-            if (!city) { return };
+            if (!city) {
+                return
+            } else {
+                //set loading to true when user starts serching for a city
+                setLoading(true);
+            };
             try {
                 const getData = await (CurrentWeatherData(city))
                 console.log(getData)
@@ -47,7 +51,7 @@ export default function CurrentWeather() {
         e.preventDefault()
         let selectedUnit = e.target.value;
         if (selectedUnit === "celsius") {
-            setTemp(Math.round(data.main.temp - 273.5))
+            setTemp(Math.round(data.main.temp - 273.15))
         } else
             if (selectedUnit === "fahrenheit") {
                 setTemp(Math.round((data.main.temp - 273.15) * 9 / 5 + 32));
@@ -66,8 +70,12 @@ export default function CurrentWeather() {
         {error && <div className="text-red-500 mx-auto"> Error fetching data: {error}</div>}
 
         {/* render loading if loading state is true */}
-        {loading ? <div className="mx-auto">Loading</div>
-            : !data ? <div>Data Not Found</div> :
+        {loading && <div className="mx-auto">Loading</div>}
+        
+        {!city && !loading && <div className="mx-auto">Enter a City</div>}
+        
+        {city && !loading && !data && <div>Data Not Found</div>}
+        { data &&
                 //Render the current weather
                 <div
                     className={[
