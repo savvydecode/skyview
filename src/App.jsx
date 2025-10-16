@@ -1,12 +1,7 @@
-import { useState } from 'react'
+import React from 'react';
+import { RouterProvider } from 'react-router-dom';
+import router from './routes/router';
 
-function App() {
-
-  return (
-    <main className='text-black bg-[#d3e7e8]'>
-      <h1>SkyView</h1>
-    </main>
-  )
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App
