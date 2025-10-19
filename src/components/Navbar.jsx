@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import SearchBar from "./SearchBar";
+import { useState } from "react"; import { NavLink } from "react-router-dom"; import SearchBar from "./SearchBar";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
@@ -73,6 +71,14 @@ export default function Navbar() {
                             <span className="mr-2" role="img" aria-label="map">🗺️</span>
                             Map
                         </NavLink>
+                        <NavLink
+                            to="/forecast"
+                            className={({ isActive }) =>
+                                `${linkBase} ${isActive ? active : ""}`
+                            }
+                        >
+                            Forecast
+                        </NavLink>
 
                         {/* Added: Favorites link (desktop) */}
                         <NavLink
@@ -85,7 +91,7 @@ export default function Navbar() {
                         </NavLink>
 
                         {/* If Forecast/Favorites links already exist in your file, keep them as-is.
-                           We are only adding the dark mode toggle button below. */}
+                       We are only adding the dark mode toggle button below. */}
 
                         {/* Desktop search on the navbar */}
                         <div className="w-72">
@@ -155,6 +161,15 @@ export default function Navbar() {
                         >
                             <span className="mr-2" role="img" aria-label="map">🗺️</span>
                             Map
+                        </NavLink>
+                        <NavLink
+                            to="/forecast"
+                            className={({ isActive }) =>
+                                `${linkBase} mt-1 ${isActive ? active : ""}`
+                            }
+                            onClick={closeMenu}
+                        >
+                            Forecast
                         </NavLink>
 
                         {/* If Forecast/Favorites links already exist in your file, keep them as-is. */}
