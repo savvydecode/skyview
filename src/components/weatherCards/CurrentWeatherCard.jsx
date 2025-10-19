@@ -155,7 +155,7 @@ export default function CurrentWeather() {
                 <div className="space-y-4">
 
                     {/* Header: Location, time, unit select */}
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex flex-col sm:flex-row  sm:items-center sm:justify-between gap-3">
                         <div>
                             <div className="text-2xl font-semibold text-gray-900">
                                 {name}{country ? `, ${country}` : ""}
@@ -164,7 +164,7 @@ export default function CurrentWeather() {
                                 Last updated: {updatedAt ? formatTime(updatedAt, tzOffset) : "--:--"} (local)
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex  flex-col xs:flex-row items-center gap-3">
                             <label htmlFor="temperature" className="text-sm text-gray-700">Units:</label>
                             <select
                                 name="temperature"
@@ -182,7 +182,7 @@ export default function CurrentWeather() {
                             <button
                                 type="button"
                                 onClick={() => { if (name) toggleFavorite(name); }}
-                                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-sm ${
+                                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-sm   ${
                                     isFav
                                         ? "border-yellow-400 bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
                                         : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100"

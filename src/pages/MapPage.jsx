@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import useCityStore from '../store';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function MapPage() {
     const city = useCityStore((s) => s.city);
@@ -126,6 +127,7 @@ export default function MapPage() {
                     The map centers on your selected city. Change it from the search bar in the navbar.
                 </p>
             </div>
+            <Footer />
         </div>
     );
 }

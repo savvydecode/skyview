@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import useCityStore from "../store";
+import Footer from "../components/Footer";
 
 export default function FavoriteSearches() {
     const favorites = useCityStore((s) => s.favorites);
@@ -15,6 +16,20 @@ export default function FavoriteSearches() {
     return (
         <main className="max-w-6xl mx-auto px-4 py-4">
             <h1 className="text-2xl font-semibold text-gray-900 mb-4">Favorites</h1>
+
+            {/* Back to Home button */}
+            <div className="mb-4">
+                <button
+                    type="button"
+                    onClick={() => navigate("/")}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+                    aria-label="Back to home"
+                    title="Back to home"
+                >
+                    <span aria-hidden="true">←</span>
+                    Back to Home
+                </button>
+            </div>
 
             {!favorites?.length ? (
                 <div className="text-gray-600">
@@ -50,6 +65,9 @@ export default function FavoriteSearches() {
                     ))}
                 </div>
             )}
+            <div className="fixed bottom-0 left-0 right-0  max-w-full">
+                <Footer />
+            </div>
         </main>
     );
 }
