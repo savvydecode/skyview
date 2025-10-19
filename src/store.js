@@ -5,16 +5,62 @@ import axios from 'axios';
 // Utility: normalize city names for case-insensitive matching
 const normalize = (name) => (name || '').trim().toLowerCase();
 
+// Determine an initial theme, preferring persisted store, then localStorage 'theme', then system preference
+function getPreferredTheme() {
+    try {
+        // Try Zustand persisted store payload
+        const raw = localStorage.getItem('sv:store:v1');
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            const state = parsed?.state || parsed;
+            if (state?.theme === 'dark' || state?.theme === 'light') return state.theme;
+        }
+        // Fallback to a simple key if it was previously saved by the UI
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark' || saved === 'light') return saved;
+    } catch {
+        // ignore
+    }
+    // System preference or current DOM class
+    try {
+        if (window.matchMedia?.('(prefers-color-scheme: dark)')?.matches) return 'dark';
+    } catch { }
+    try {
+        if (document?.documentElement?.classList?.contains('dark')) return 'dark';
+    } catch { }
+    return 'light';
+}
+
 /**
  * Global app store:
+ * - theme: 'light' | 'dark'
  * - city: selected city string
  * - favorites: list of favorite city names (stored as { name, key, addedAt })
  *
- * Persisted to localStorage so favorites and selected city survive reloads.
+ * Persisted to localStorage so theme, favorites and selected city survive reloads.
  */
 const useCityStore = create(
     persist(
         (set, get) => ({
+            // Theme state
+            theme: getPreferredTheme(),
+            setTheme: (value) => {
+                const v = value === 'dark' ? 'dark' : 'light';
+                set({ theme: v });
+                // Optional: keep compatibility with any UI logic reading this key
+                try {
+                    localStorage.setItem('theme', v);
+                } catch { }
+            },
+            toggleTheme: () => {
+                const next = (get().theme === 'dark') ? 'light' : 'dark';
+                set({ theme: next });
+                try {
+                    localStorage.setItem('theme', next);
+                } catch { }
+                return next;
+            },
+
             // Selected city
             city: '',
             setCity: (value) =>
@@ -125,15 +171,26 @@ const useCityStore = create(
         }),
         {
             name: 'sv:store:v1',
-            version: 1,
+            version: 2,
             storage: createJSONStorage(() => localStorage),
             // Only persist serializable state
             partialize: (state) => ({
+                theme: state.theme,
                 city: state.city,
                 favorites: state.favorites,
             }),
             migrate: (persistedState, version) => {
-                // Simple passthrough migration; adjust if shape changes in the future
+                // Ensure theme exists after upgrade
+                if (!persistedState) return persistedState;
+                if (version < 2) {
+                    return {
+                        ...persistedState,
+                        theme:
+                            persistedState.theme === 'dark' || persistedState.theme === 'light'
+                                ? persistedState.theme
+                                : getPreferredTheme(),
+                    };
+                }
                 return persistedState;
             },
         }

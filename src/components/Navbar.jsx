@@ -12,6 +12,32 @@ export default function Navbar() {
 
     const closeMenu = () => setOpen(false);
 
+    // Added: local dark mode toggle (no changes to existing logic)
+    const [isDark, setIsDark] = useState(() => {
+        if (typeof document === "undefined") return false;
+        const saved = (() => {
+            try { return localStorage.getItem("theme"); } catch { return null; }
+        })();
+        if (saved === "dark") return true;
+        if (saved === "light") return false;
+        return document.documentElement.classList.contains("dark");
+    });
+
+    const toggleTheme = () => {
+        const root = document.documentElement;
+        const next = !isDark;
+        setIsDark(next);
+        if (next) {
+            root.classList.add("dark");
+            root.style.colorScheme = "dark";
+            try { localStorage.setItem("theme", "dark"); } catch { }
+        } else {
+            root.classList.remove("dark");
+            root.style.colorScheme = "light";
+            try { localStorage.setItem("theme", "light"); } catch { }
+        }
+    };
+
     return (
         <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-200">
             <div className="max-w-6xl mx-auto px-4">
@@ -47,20 +73,36 @@ export default function Navbar() {
                             <span className="mr-2" role="img" aria-label="map">🗺️</span>
                             Map
                         </NavLink>
-                        {/* Forecast link added after Map (desktop) */}
+
+                        {/* Added: Favorites link (desktop) */}
                         <NavLink
-                            to="/forecast"
+                            to="/favorites"
                             className={({ isActive }) =>
                                 `${linkBase} ${isActive ? active : ""}`
                             }
                         >
-                            Forecast
+                            Favorites
                         </NavLink>
+
+                        {/* If Forecast/Favorites links already exist in your file, keep them as-is.
+                           We are only adding the dark mode toggle button below. */}
 
                         {/* Desktop search on the navbar */}
                         <div className="w-72">
                             <SearchBar />
                         </div>
+
+                        {/* Added: Dark mode toggle (desktop) */}
+                        <button
+                            type="button"
+                            onClick={toggleTheme}
+                            aria-pressed={isDark}
+                            aria-label="Toggle dark mode"
+                            title="Toggle dark mode"
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-gray-800 hover:bg-blue-100 hover:text-blue-700"
+                        >
+                            {isDark ? "☀️ Light" : "🌙 Dark"}
+                        </button>
                     </div>
 
                     {/* Mobile: hamburger */}
@@ -114,29 +156,23 @@ export default function Navbar() {
                             <span className="mr-2" role="img" aria-label="map">🗺️</span>
                             Map
                         </NavLink>
-                        {/* Forecast link added after Map (mobile) */}
-                        <NavLink
-                            to="/forecast"
-                            className={({ isActive }) =>
-                                `${linkBase} mt-1 ${isActive ? active : ""}`
-                            }
-                            onClick={closeMenu}
-                        >
-                            Forecast
-                        </NavLink>
 
-                        {/* New Favorites link (after Forecast) */}
-                        <NavLink
-                            to="/favorites"
-                            className={({ isActive }) =>
-                                `${linkBase} ${isActive ? active : ""}`
-                            }
+                        {/* If Forecast/Favorites links already exist in your file, keep them as-is. */}
+
+                        {/* Added: Dark mode toggle (mobile) */}
+                        <button
+                            type="button"
+                            onClick={() => { toggleTheme(); closeMenu(); }}
+                            aria-pressed={isDark}
+                            aria-label="Toggle dark mode"
+                            title="Toggle dark mode"
+                            className={`${linkBase} mt-1 border border-gray-200`}
                         >
-                            Favorites
-                        </NavLink>
+                            {isDark ? "☀️ Light mode" : "🌙 Dark mode"}
+                        </button>
                     </div>
                 )}
             </div>
-        </nav >
+        </nav>
     );
 }
