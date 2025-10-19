@@ -47,6 +47,15 @@ export default function Navbar() {
                             <span className="mr-2" role="img" aria-label="map">🗺️</span>
                             Map
                         </NavLink>
+                        {/* Forecast link added after Map (desktop) */}
+                        <NavLink
+                            to="/forecast"
+                            className={({ isActive }) =>
+                                `${linkBase} ${isActive ? active : ""}`
+                            }
+                        >
+                            Forecast
+                        </NavLink>
 
                         {/* Desktop search on the navbar */}
                         <div className="w-72">
@@ -105,9 +114,29 @@ export default function Navbar() {
                             <span className="mr-2" role="img" aria-label="map">🗺️</span>
                             Map
                         </NavLink>
+                        {/* Forecast link added after Map (mobile) */}
+                        <NavLink
+                            to="/forecast"
+                            className={({ isActive }) =>
+                                `${linkBase} mt-1 ${isActive ? active : ""}`
+                            }
+                            onClick={closeMenu}
+                        >
+                            Forecast
+                        </NavLink>
+
+                        {/* New Favorites link (after Forecast) */}
+                        <NavLink
+                            to="/favorites"
+                            className={({ isActive }) =>
+                                `${linkBase} ${isActive ? active : ""}`
+                            }
+                        >
+                            Favorites
+                        </NavLink>
                     </div>
                 )}
             </div>
-        </nav>
+        </nav >
     );
 }

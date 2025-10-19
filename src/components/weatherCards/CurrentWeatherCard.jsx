@@ -13,6 +13,10 @@ export default function CurrentWeather() {
     const city = useCityStore((state) => state.city);
     const initCityFromGeolocation = useCityStore((state) => state.initCityFromGeolocation);
 
+    // ADDED: favorites selectors from zustand store (no changes to existing lines)
+    const favorites = useCityStore((state) => state.favorites);
+    const toggleFavorite = useCityStore((state) => state.toggleFavorite);
+
     // try to find the user's city on first load and save to store
     useEffect(() => {
         if (!city) {
@@ -38,7 +42,7 @@ export default function CurrentWeather() {
     // helper: degrees to compass direction (e.g., N, NE, E, ...)
     const degToCompass = (deg) => {
         if (deg == null) return "";
-        const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "S", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
         const idx = Math.round(deg / 22.5) % 16;
         return dirs[idx];
     };
@@ -119,6 +123,11 @@ export default function CurrentWeather() {
     const tzOffset = data?.timezone || 0;
     const updatedAt = data?.dt;
 
+    // ADDED: compute favorite state for the current city (subscribes to favorites via selector above)
+    const isFav = (favorites || []).some(
+        (i) => i.key === (name || "").trim().toLowerCase()
+    );
+
     return (
         <div className={[
             "mx-4 my-3 rounded-2xl p-5",
@@ -168,6 +177,23 @@ export default function CurrentWeather() {
                                 <option value="fahrenheit">Fahrenheit (°F)</option>
                                 <option value="kelvin">Kelvin (K)</option>
                             </select>
+
+                            {/* ADDED: Favorite toggle button */}
+                            <button
+                                type="button"
+                                onClick={() => { if (name) toggleFavorite(name); }}
+                                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-sm ${
+                                    isFav
+                                        ? "border-yellow-400 bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
+                                        : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
+                                }`}
+                                aria-pressed={isFav}
+                                aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
+                                title={isFav ? "Remove from favorites" : "Add to favorites"}
+                            >
+                                <span aria-hidden="true">{isFav ? "★" : "☆"}</span>
+                                {isFav ? "Favorite" : "Add to favorites"}
+                            </button>
                         </div>
                     </div>
 
